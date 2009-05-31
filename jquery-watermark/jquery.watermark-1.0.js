@@ -147,7 +147,7 @@ $.fn.watermark = function (text, className) {
 	/// <remarks>
 	///		The effect of changing the text and class name on an input element is called a watermark because
 	///		typically light gray text is used to provide a hint as to what type of input is required. However,
-	///		teh appearance of the watermark can be something completely different: simply change the CSS style
+	///		the appearance of the watermark can be something completely different: simply change the CSS style
 	///		pertaining to the supplied class name.
 	///		
 	///		The first time watermark() is called on an element, the watermark text and class name are initialized,
