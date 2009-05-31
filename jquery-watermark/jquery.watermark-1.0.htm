@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+	<title>jQuery Watermark</title>
+
+	<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+	<script type="text/javascript">google.load("jquery", "1.3.2");</script>
+	<script type="text/javascript" src="jquery.watermark-1.0-min.js"></script>
+
+	<style type="text/css" media="screen">
+		.watermark {
+			color: #999;
+		}
+		.watermark2 {
+			color: #999 !important;
+			font-family: "Segoe UI", Arial, Helvetica, sans-serif;
+			font-style: italic;
+			font-weight: normal;
+		}
+		.watermark3 {
+			color: #c77;
+		}
+
+		html {
+			color: #000;
+			background: #fff;
+		}
+		body {
+			margin: 10px;
+			font: 12px Verdana, Geneva, sans-serif;
+		}
+		h1 {
+			margin: 30px 0 10px;
+			font: bold 24px "Segoe UI", Arial, Helvetica, sans-serif;
+		}
+		h2 {
+			margin: 10px 0 20px;
+			font: bold 18px "Segoe UI", Arial, Helvetica, sans-serif;
+		}
+		h3 {
+			margin: 30px 0 10px;
+			font: bold 22px "Segoe UI", Arial, Helvetica, sans-serif;
+		}
+		form.cmxform fieldset {
+			margin-bottom: 10px;
+		}
+		form.cmxform legend {
+			padding: 0 2px;
+			font-weight: bold;
+		}
+		form.cmxform label {
+			display: inline-block;
+			line-height: 1.8;
+			vertical-align: top;
+		}
+		form.cmxform fieldset ol {
+			margin: 0;
+			padding: 0;
+		}
+		form.cmxform fieldset li {
+			list-style: none;
+			padding: 5px;
+			margin: 0;
+		}
+		form.cmxform fieldset fieldset {
+			border: none;
+			margin: 3px 0 0;
+		}
+		form.cmxform fieldset fieldset legend {
+			padding: 0 0 5px;
+			font-weight: normal;
+		}
+		form.cmxform fieldset fieldset label {
+			display: block;
+			width: auto;
+		}
+		form.cmxform em {
+			font-weight: bold;
+			font-style: normal;
+			color: #f00;
+		}
+		form.cmxform label {
+			width: 120px; /* Width of labels */
+		}
+		form.cmxform input[type=text] {
+			width: 160px;
+			height: 16px !important;
+			line-height: 16px !important;
+		}
+	</style>
+<head>
+<body>
+<form action="#" class="cmxform">
+	<h1>jQuery Watermark Plugin</h1>
+	<h2>v 1.0</h2>
+	<p>This jQuery plugin will easily create watermark hints in input elements.</p>
+	<p>Features:</p>
+	<ul>
+		<li>Watermark style is controlled by CSS classes</li>
+		<li>Each input element can have its own independent watermark class/style</li>
+		<li>Each input element can have its own watermark text</li>
+		<li>Plugin automatically removes all watermarks prior to form submission</li>
+		<li>Both watermark text and CSS class name can be changed dynamically</li>
+		<li>Visual Studio Intellisense-compatible documentation included in source</li>
+		<li>Comes with jQuery selector extension ":data(...)" (documented in source)</li>
+		<li>Minimized version less than 2,000 bytes</li>
+	</ul>
+
+	<div class="demo">
+		<h3>Demonstration 1</h3>
+		<fieldset id="demo1">
+			<legend>Country uses simple watermark</legend>
+			<ol>
+				<li><label for="d1-name">Name <em>*</em></label> <input id="d1-name" /></li>
+				<li><label for="d1-address1">Address <em>*</em></label> <input id="d1-address1" /></li>
+				<li><label for="d1-town-city">Town/City <em>*</em></label> <input id="d1-town-city" /></li>
+				<li><label for="d1-state">State/Province <em>*</em></label> <input id="d1-state" /></li>
+				<li><label for="d1-postcode">Zip/Postcode <em>*</em></label> <input id="d1-postcode" /></li>
+				<li><label for="d1-country">Country</label> <input id="d1-country" /></li>
+				<li><label></label> <input type="submit" value="Submit" /></li>
+				<li><label></label> Click <strong>Submit</strong> to see watermark(s) automatically removed prior to form submission.</li>
+			</ol>
+		</fieldset>
+	</div>
+
+	<div class="demo">
+		<h3>Demonstration 2</h3>
+		<fieldset id="demo2">
+			<legend>Several watermarks created with one statement + different class name</legend>
+			<ol>
+				<li><label for="d2-name">Name</label> <input id="d2-name" class="required" /></li>
+				<li><label for="d2-address1">Address</label> <input id="d2-address1" class="required" /></li>
+				<li><label for="d2-town-city">Town/City</label> <input id="d2-town-city" class="required" /></li>
+				<li><label for="d2-state">State/Province</label> <input id="d2-state" class="required" /></li>
+				<li><label for="d2-postcode">Zip/Postcode</label> <input id="d2-postcode" class="required" /></li>
+				<li><label for="d2-country">Country</label> <input id="d2-country" /></li>
+				<li><label></label> <input type="submit" value="Submit" /></li>
+				<li><label></label> Click <strong>Submit</strong> to see watermark(s) automatically removed prior to form submission.</li>
+			</ol>
+		</fieldset>
+	</div>
+
+	<div class="demo">
+		<h3>Demonstration 3</h3>
+		<fieldset id="demo3">
+			<legend>Shows how watermark can be changed dynamically</legend>
+			<ol>
+				<li><label for="d3-name">Name <em>*</em></label> <input id="d3-name" /></li>
+				<li><label for="d3-address1">Address <em>*</em></label> <input id="d3-address1" /></li>
+				<li><label for="d3-town-city">Town/City <em>*</em></label> <input id="d3-town-city" /></li>
+				<li><label for="d3-state">State/Province <em>*</em></label> <input id="d3-state" /></li>
+				<li><label for="d3-postcode">Zip/Postcode <em>*</em></label> <input id="d3-postcode" /></li>
+				<li><label for="d3-country">Country</label> <input id="d3-country" /> <em id="d3-tip" style="display:none;">Clear input to restart timer</em></li>
+				<li><label></label> <input type="submit" value="Submit" /></li>
+				<li><label></label> Click <strong>Submit</strong> to see watermark(s) automatically removed prior to form submission.</li>
+			</ol>
+		</fieldset>
+	</div>
+
+	<script type="text/javascript">
+		// ** DEMO 1 *************
+		$(function () {
+			$("#d1-country").watermark("Leave blank for USA");
+		});
+
+		// ** DEMO 1 *************
+		$(function () {
+			$("#demo2 .required").watermark("Required", "watermark2");
+		});
+
+		// ** DEMO 3 *************
+		var $d3 = $("#d3-country"), $d3tip = $("#d3-tip"), c = 11, timer;
+		
+		function countdown() {
+			if (--c == 0) {
+				$d3.val("United States").watermark();
+				$d3tip.show();
+			}
+			else {
+				$d3.watermark("Auto-select in: " + c, (c>5)? "watermark" : "watermark3");
+				timer = window.setTimeout(countdown, 1000);
+			}
+		}
+		
+		$(function () {
+			timer = window.setTimeout(countdown, 1000);
+			$d3.focus(
+				function () {
+					if (timer) {
+						window.clearTimeout(timer);
+					}
+				}
+			).blur(
+				function () {
+					$d3.watermark("", "watermark");
+					
+					if ($d3.val().length == 0) {
+						c = 11;
+						$d3tip.hide();
+						countdown();
+					}
+				}
+			);
+		});
+		
+		// ** FORM SUBMIT MESSAGE *************
+		var submitted = false;
+		
+		$("form.cmxform").submit(
+			function () {
+				submitted = true;
+			}
+		);
+		
+		$(window).unload(
+			function () {
+				if (submitted) {
+					alert("All watermarks were automatically removed prior to form submission.");
+				}
+			}
+		);
+	</script>
+	
+</form>
+</body>
+</html>
