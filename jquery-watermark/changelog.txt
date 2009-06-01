@@ -1,0 +1,24 @@
+Changelog for Watermark plugin for jQuery
+Copyright © 2009 Todd Northrop
+http://www.speednet.biz/
+
+Last updated June 1, 2009
+
+____________________________
+Version 1.1 (2009-06-01)
+	
+	Improved form submission by completely replacing built-in form submit function with our own function that first clears the watermarks, then submits the form.  In previous version programmatic form submission was not triggering the watermark clearing function.
+	
+	Handles situation where text box's maxLength is less than the length of the watermark string.
+	
+	Fixed IE bug the hides blinking cursor in some cases.
+	
+	Improved internal use of jQuery data collection by assigning string constants for key names in one place, rather than replying on hard-coded key names spread throughout the source file.
+	
+____________________________
+Version 1.0 (2009-05-31)
+	
+	Initial release.
+
+
+__
