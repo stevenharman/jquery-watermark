@@ -6,7 +6,7 @@
 
 	<script type="text/javascript" src="http://www.google.com/jsapi"></script>
 	<script type="text/javascript">google.load("jquery", "1.3.2");</script>
-	<script type="text/javascript" src="jquery.watermark-1.1.min.js"></script>
+	<script type="text/javascript" src="jquery.watermark-1.1.1.js"></script>
 
 	<style type="text/css" media="screen">
 		.watermark {
@@ -91,22 +91,23 @@
 	</style>
 <head>
 <body>
-<form action="#" class="cmxform">
-	<h1>jQuery Watermark Plugin</h1>
-	<h2>v 1.1</h2>
-	<p>This jQuery plugin will easily create watermark hints in input elements.</p>
-	<p>Features:</p>
-	<ul>
-		<li>Watermark style is controlled by CSS classes</li>
-		<li>Each input element can have its own independent watermark class/style</li>
-		<li>Each input element can have its own watermark text</li>
-		<li>Plugin automatically removes all watermarks prior to form submission</li>
-		<li>Both watermark text and CSS class name can be changed dynamically</li>
-		<li>Visual Studio Intellisense-compatible documentation included in source</li>
-		<li>Comes with jQuery selector extension ":data(...)" (documented in source)</li>
-		<li>Minified version very compact &mdash; about 2,000 bytes</li>
-	</ul>
 
+<h1>jQuery Watermark Plugin</h1>
+<h2>v 1.1.1</h2>
+<p>This jQuery plugin will easily create watermark hints in input elements.</p>
+<p>Features:</p>
+<ul>
+	<li>Watermark style is controlled by CSS classes</li>
+	<li>Each input element can have its own independent watermark class/style</li>
+	<li>Each input element can have its own watermark text</li>
+	<li>Plugin automatically removes all watermarks prior to form submission</li>
+	<li>Both watermark text and CSS class name can be changed dynamically</li>
+	<li>Visual Studio Intellisense-compatible documentation included in source</li>
+	<li>Comes with jQuery selector extension ":data(...)" (documented in source)</li>
+	<li>Minified version very compact &mdash; about 2,000 bytes</li>
+</ul>
+
+<form action="" method="GET" class="cmxform">
 	<div class="demo">
 		<h3>Demonstration 1</h3>
 		<fieldset id="demo1">
@@ -117,30 +118,36 @@
 				<li><label for="d1-town-city">Town/City <em>*</em></label> <input id="d1-town-city" /></li>
 				<li><label for="d1-state">State/Province <em>*</em></label> <input id="d1-state" /></li>
 				<li><label for="d1-postcode">Zip/Postcode <em>*</em></label> <input id="d1-postcode" /></li>
-				<li><label for="d1-country">Country</label> <input id="d1-country" /></li>
-				<li><label></label> <input type="submit" value="Submit" /></li>
-				<li><label></label> Click <strong>Submit</strong> to see watermark(s) automatically removed prior to form submission.</li>
+				<li><label for="d1-country">Country</label> <input id="d1-country" name="d1-country" /></li>
+				<li><label></label> <input type="submit" value="Submit" /> &nbsp; <input id="d1-countryFocus" type="button" value="Set Focus to Country" /> </li>
+				<li><label></label> &bull; This is a normal <strong>type=&quot;submit&quot;</strong> button.</li>
+				<li><label></label> &bull; Check the QueryString after clicking to verify that a watermark value is never submitted.</li>
 			</ol>
 		</fieldset>
 	</div>
+</form>
 
+<form action="" method="GET" class="cmxform">
 	<div class="demo">
 		<h3>Demonstration 2</h3>
 		<fieldset id="demo2">
 			<legend>Several watermarks created with one statement + different class name</legend>
 			<ol>
-				<li><label for="d2-name">Name</label> <input id="d2-name" class="required" /></li>
-				<li><label for="d2-address1">Address</label> <input id="d2-address1" class="required" /></li>
-				<li><label for="d2-town-city">Town/City</label> <input id="d2-town-city" class="required" /></li>
-				<li><label for="d2-state">State/Province</label> <input id="d2-state" class="required" /></li>
-				<li><label for="d2-postcode">Zip/Postcode</label> <input id="d2-postcode" maxlength="5" class="required" /> (maxlength=5, but watermark is longer)</li>
+				<li><label for="d2-name">Name</label> <input id="d2-name" name="d2-name" class="required" /></li>
+				<li><label for="d2-address1">Address</label> <input id="d2-address1" name="d2-address1" class="required" /></li>
+				<li><label for="d2-town-city">Town/City</label> <input id="d2-town-city" name="d2-town-city" class="required" /></li>
+				<li><label for="d2-state">State/Province</label> <input id="d2-state" name="d2-state" class="required" /></li>
+				<li><label for="d2-postcode">Zip/Postcode</label> <input id="d2-postcode" name="d2-postcode" maxlength="5" class="required" /> (maxlength=5, but watermark is longer)</li>
 				<li><label for="d2-country">Country</label> <input id="d2-country" /></li>
-				<li><label></label> <input type="submit" value="Submit" /></li>
-				<li><label></label> Click <strong>Submit</strong> to see watermark(s) automatically removed prior to form submission.</li>
+				<li><label></label> <input id="d2-submit" type="button" value="Submit" /></li>
+				<li><label></label> &bull; This Submit button issues a call to the <strong>form (DOM object) submit() function</strong> (programmatic submit).</li>
+				<li><label></label> &bull; Check the QueryString after clicking to verify that a watermark value is never submitted.</li>
 			</ol>
 		</fieldset>
 	</div>
+</form>
 
+<form action="" method="GET" class="cmxform">
 	<div class="demo">
 		<h3>Demonstration 3</h3>
 		<fieldset id="demo3">
@@ -151,22 +158,34 @@
 				<li><label for="d3-town-city">Town/City <em>*</em></label> <input id="d3-town-city" /></li>
 				<li><label for="d3-state">State/Province <em>*</em></label> <input id="d3-state" /></li>
 				<li><label for="d3-postcode">Zip/Postcode <em>*</em></label> <input id="d3-postcode" /></li>
-				<li><label for="d3-country">Country</label> <input id="d3-country" /> <em id="d3-tip" style="display:none;">Clear input to restart timer</em></li>
-				<li><label></label> <input type="submit" value="Submit" /></li>
-				<li><label></label> Click <strong>Submit</strong> to see watermark(s) automatically removed prior to form submission.</li>
+				<li><label for="d3-country">Country</label> <input id="d3-country" name="d3-country" /> <em id="d3-tip" style="display:none;">Clear input to restart timer</em></li>
+				<li><label></label> <input id="d3-submit" type="button" value="Submit" /></li>
+				<li><label></label> &bull; This Submit button issues a call to the <strong>jQuery submit() trigger</strong> (programmatic submit).</li>
+				<li><label></label> &bull; Check the QueryString after clicking to verify that a watermark value is never submitted.</li>
 			</ol>
 		</fieldset>
 	</div>
+</form>
 
 	<script type="text/javascript">
 		// ** DEMO 1 *************
 		$(function () {
 			$("#d1-country").watermark("Leave blank for USA");
+			$("#d1-countryFocus").click(
+				function () {
+					$("#d1-country")[0].focus();
+				}
+			);
 		});
 
-		// ** DEMO 1 *************
+		// ** DEMO 2 *************
 		$(function () {
 			$("#demo2 .required").watermark("Required", "watermark2");
+			$("#d2-submit").click(
+				function () {
+					this.form.submit();
+				}
+			);
 		});
 
 		// ** DEMO 3 *************
@@ -200,26 +219,13 @@
 					}
 				}
 			);
-		});
-		
-		// ** FORM SUBMIT MESSAGE *************
-		var submitted = false;
-		
-		$("form.cmxform").submit(
-			function () {
-				submitted = true;
-			}
-		);
-		
-		$(window).unload(
-			function () {
-				if (submitted) {
-					alert("All watermarks were automatically removed prior to form submission.");
+			$("#d3-submit").click(
+				function () {
+					$(this.form).submit();
 				}
-			}
-		);
+			);
+		});
 	</script>
 	
-</form>
 </body>
 </html>

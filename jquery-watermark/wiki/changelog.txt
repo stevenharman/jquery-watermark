@@ -5,6 +5,15 @@ http://www.speednet.biz/
 Last updated June 1, 2009
 
 ____________________________
+Version 1.1.1 (2009-06-01)
+	
+	Fixed regression bug in last release that prevented some form submissions.
+	
+	Fixed focus bug on dynamically-changed watermarks.
+	
+	Improved demonstration page to test/demonstrate three different form submission methods, using three separate forms on the page. The QueryString can be examined to ensure that no watermarks were posted during form submission.
+	
+____________________________
 Version 1.1 (2009-06-01)
 	
 	Improved form submission by completely replacing built-in form submit function with our own function that first clears the watermarks, then submits the form.  In previous version programmatic form submission was not triggering the watermark clearing function.
