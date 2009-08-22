@@ -2,8 +2,17 @@ Changelog for Watermark plugin for jQuery
 Copyright © 2009 Todd Northrop
 http://www.speednet.biz/
 
-Last updated June 2, 2009
+Last updated August 22, 2009
 
+____________________________
+Version 2.x (2009-xx-xx)
+	
+	Working copy for next version of the plugin.  Will focus on fixing bugs and suggestions on the Issue list.
+	
+	(TO DO) Issue #1 - Integrate with Safari's input type="search".
+	
+	(TO DO) Issue #4 - Dragging and dropping text does not replace the watermark.
+	
 ____________________________
 Version 2.0 (2009-06-02)
 	

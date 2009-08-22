@@ -6,7 +6,7 @@
 
 	<script type="text/javascript" src="http://www.google.com/jsapi"></script>
 	<script type="text/javascript">google.load("jquery", "1.3.2");</script>
-	<script type="text/javascript" src="jquery.watermark-2.0.min.js"></script>
+	<script type="text/javascript" src="jquery.watermark.js"></script>
 
 	<style type="text/css" media="screen">
 		.watermark {
@@ -160,6 +160,7 @@
 		<li><a href="#3">Demo 3</a> &ndash; Watermark changed dynamically (countdown timer)</li>
 		<li><a href="#4">Demo 4</a> &ndash; Multi-line watermark in a TEXTAREA tag</li>
 		<li><a href="#5">Demo 5</a> &ndash; Watermark in a password input element</li>
+		<li><a href="#6">Demo 6</a> &ndash; Support for Safari search element (type=&quot;search&quot;)</li>
 	</ul>
 </fieldset>
 
@@ -248,6 +249,19 @@
 	</fieldset>
 </form>
 
+<form id="demo6" action="" method="GET" class="cmxform">
+	<h3>Demonstration 6</h3>
+	<fieldset>
+		<legend>Support for Safari search element (type=&quot;search&quot;)</legend>
+		<ol>
+			<li><label for="d6-search">Search</label> <input id="d6-search" name="d6-search" type="search" /></li>
+			<li><label for="d6-searchhistory">Search w/ History</label> <input id="d6-searchhistory" name="d6-searchhistory" type="search" results="5" /></li>
+			<li><label></label> <input type="submit" value="Submit" /></li>
+			<li><label></label> &bull; This example only works with Safari and any other browser that supports <strong style="white-space:nowrap">&lt;input type=&quot;search&quot; ... /&gt;</strong>.</li>
+		</ol>
+	</fieldset>
+</form>
+
 <div id="foot">
 	<p>Watermark plugin for jQuery</p>
 	<p>Copyright &copy; 2009 Todd Northrop</p>
@@ -327,6 +341,12 @@
 	$(function () {
 		$("#d5-username").watermark("Enter your username");
 		$("#d5-password").watermark("Enter your password");
+	});
+
+	// ** DEMO 6 *************
+	$(function () {
+		$("#d6-search").watermark("Search");
+		$("#d6-searchhistory").watermark("Enter keyword(s) or select from past searches");
 	});
 
 	// ** Table of Contents *************

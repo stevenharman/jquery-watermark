@@ -1,11 +1,11 @@
 /*	
 	Watermark plugin for jQuery
-	Version: 2.0
+	Version: 2.x
 
 	Copyright (c) 2009 Todd Northrop
 	http://www.speednet.biz/
 	
-	June 2, 2009
+	Xxxxxx xx, 2009
 
 	Requires:  jQuery 1.2.3+
 	
@@ -45,7 +45,7 @@ var
 	selWatermarkDefined = ":data(" + dataFlag + ")",
 
 	// Includes only elements capable of having watermark
-	selWatermarkAble = ":text,:password,textarea";
+	selWatermarkAble = ":text,:password,:search,textarea";
 
 // Extends jQuery with a custom selector - ":data(...)"
 // :data(<name>)  Includes elements that have a specific name defined in the jQuery data collection. (Only the existence of the name is checked; the value is ignored.)
@@ -92,6 +92,10 @@ $.watermark = {
 	// Default class name for all watermarks
 	className: "watermark",
 	
+	// If true, plugin will detect and use native browser support for
+	// watermarks, if available. (e.g., Safari's placeholder attribute.)
+	useNative: true,
+	
 	// Hide one or more watermarks by specifying any selector type
 	// i.e., DOM element, string selector, jQuery matched set, etc.
 	hide: function (selector) {
@@ -101,7 +105,7 @@ $.watermark = {
 			}
 		);
 	},
-
+	
 	// Internal use only.
 	_hide: function ($input, focus) {
 	
@@ -150,14 +154,14 @@ $.watermark = {
 	
 	// Internal use only.
 	_show: function ($input) {
-		var val = $input.val(), text = $input.data(dataText);
+		var val = $input.val(), text = $input.data(dataText), type = $input.attr("type");
 
 		if (((val.length == 0) || (val == text)) && (!$input.data(dataFocus))) {
 		
 			// Password type?
 			if ($input.data(dataPassword)) {
 				
-				if ($input.attr("type") === "password") {
+				if (type === "password") {
 					var $wm = $input.data(dataPassword), $wrap = $input.parent();
 					$wrap[0].removeChild($input[0]); // Can't use jQuery methods, because they destroy data
 					$wrap[0].appendChild($wm[0]);
@@ -165,8 +169,8 @@ $.watermark = {
 				}
 			}
 		
-			// Ensure maxLength big enough to hold watermark (input of type="text" only)
-			if ($input.attr("type") === "text") {
+			// Ensure maxLength big enough to hold watermark (input of type="text" or type="search" only)
+			if ((type === "text") || (type === "search")) {
 				var maxLen = $input.attr("maxLength");
 				
 				if ((maxLen > 0) && (text.length > maxLen)) {
@@ -242,6 +246,22 @@ $.fn.watermark = function (text, className) {
 	return this.filter(selWatermarkAble).each(
 		function () {
 			var $input = $(this);
+			
+			// Detect and use native browser support, if enabled with $.watermark.useNative
+			if ($.watermark.useNative) {
+				
+				// Safari placeholder attribute
+				if (typeof(this.placeholder) === "string") {
+					
+					if (hasText) {
+						this.placeholder = text;
+					}
+					
+					// Only set data flag for non-native watermarks (purposely commented-out)
+					// $input.data(dataFlag, 1);
+					return;
+				}
+			}
 			
 			// Watermark already initialized?
 			if ($input.data(dataFlag)) {
