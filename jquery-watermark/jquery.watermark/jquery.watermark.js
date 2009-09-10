@@ -1,11 +1,12 @@
 /*	
 	Watermark plugin for jQuery
-	Version: 2.x
+	Version: 3.0
+	http://jquery-watermark.googlecode.com/
 
 	Copyright (c) 2009 Todd Northrop
 	http://www.speednet.biz/
 	
-	Xxxxxx xx, 2009
+	September 10, 2009
 
 	Requires:  jQuery 1.2.3+
 	
@@ -89,12 +90,24 @@ $.extend($.expr[":"], {
 
 $.watermark = {
 
-	// Default class name for all watermarks
-	className: "watermark",
-	
-	// If true, plugin will detect and use native browser support for
-	// watermarks, if available. (e.g., Safari's placeholder attribute.)
-	useNative: true,
+	// Current version number of the plugin
+	version: "3.0",
+
+	// Default options used when watermarks are instantiated.
+	// Can be changed to affect the default behavior for all
+	// new or updated watermarks.
+	// BREAKING CHANGE:  The $.watermark.className
+	// property that is present in all previous versions must now
+	// be referenced as $.watermark.options.className
+	options: {
+		
+		// Default class name for all watermarks
+		className: "watermark",
+		
+		// If true, plugin will detect and use native browser support for
+		// watermarks, if available. (e.g., WebKit's placeholder attribute.)
+		useNative: true
+	},
 	
 	// Hide one or more watermarks by specifying any selector type
 	// i.e., DOM element, string selector, jQuery matched set, etc.
@@ -116,7 +129,9 @@ $.watermark = {
 			if ($input.data(dataPassword)) {
 				
 				if ($input.attr("type") === "text") {
-					var $pwd = $input.data(dataPassword), $wrap = $input.parent();
+					var $pwd = $input.data(dataPassword), 
+						$wrap = $input.parent();
+						
 					$wrap[0].removeChild($input[0]); // Can't use jQuery methods, because they destroy data
 					$wrap[0].appendChild($pwd[0]);
 					$input = $pwd;
@@ -162,10 +177,13 @@ $.watermark = {
 			if ($input.data(dataPassword)) {
 				
 				if (type === "password") {
-					var $wm = $input.data(dataPassword), $wrap = $input.parent();
+					var $wm = $input.data(dataPassword),
+						$wrap = $input.parent();
+						
 					$wrap[0].removeChild($input[0]); // Can't use jQuery methods, because they destroy data
 					$wrap[0].appendChild($wm[0]);
 					$input = $wm;
+					$input.attr("maxLength", text.length);
 				}
 			}
 		
@@ -198,12 +216,12 @@ $.watermark = {
 	}
 };
 
-$.fn.watermark = function (text, className) {
+$.fn.watermark = function (text, options) {
 	///	<summary>
-	///		Set watermark text and class name on all input elements of type="text" and textareas within
-	/// 	the matched set. If className is not included, the default is "watermark". Within the matched
-	/// 	set, only input elements with type="text" and textareas are affected; all other elements are
-	/// 	ignored.
+	///		Set watermark text and class name on all input elements of type="text/password/search" and
+	/// 	textareas within the matched set. If className is not specified in options, the default is
+	/// 	"watermark". Within the matched set, only input elements with type="text/password/search"
+	/// 	and textareas are affected; all other elements are ignored.
 	///	</summary>
 	///	<returns type="jQuery">
 	///		Returns the original jQuery matched set (not just the input and texarea elements).
@@ -214,8 +232,16 @@ $.fn.watermark = function (text, className) {
 	/// 	a String type), then the watermark will have the net effect of only changing the class name when
 	/// 	the input or textarea element's value is empty and it does not have focus.
 	///	</param>
-	///	<param name="className" type="String" optional="true">
-	///		Provides the ability to override the default class name of "watermark" with the supplied class name.
+	///	<param name="options" type="Object" optional="true">
+	///		Provides the ability to override the default watermark options ($.watermark.options). For backward
+	/// 	compatibility, if a string value is supplied, it is used as the class name that overrides the class
+	/// 	name in $.watermark.options.className. Properties include:
+	/// 		className: When the watermark is visible, the element will be styled using this class name.
+	/// 		useNative (Boolean or Function): Specifies if native browser support for watermarks will supersede
+	/// 			plugin functionality. If useNative is a function, the return value from the function will
+	/// 			determine if native support is used. The function is passed one argument -- a jQuery object
+	/// 			containing the element being tested as the only element in its matched set -- and the DOM
+	/// 			element being tested is the object on which the function is invoked (the value of "this").
 	///	</param>
 	/// <remarks>
 	///		The effect of changing the text and class name on an input element is called a watermark because
@@ -224,7 +250,10 @@ $.fn.watermark = function (text, className) {
 	///		pertaining to the supplied class name.
 	///		
 	///		The first time watermark() is called on an element, the watermark text and class name are initialized,
-	///		and the focus and blur events are hooked in order to control the display of the watermark.
+	///		and the focus and blur events are hooked in order to control the display of the watermark.  Also, as
+	/// 	of version 3.0, drag and drop events are hooked to guard against dropped text being appended to the
+	/// 	watermark.  If native watermark support is provided by the browser, it is detected and used, unless
+	/// 	the useNative option is set to false.
 	///		
 	///		Subsequently, watermark() can be called again on an element in order to change the watermark text
 	///		and/or class name, and it can also be called without any arguments in order to refresh the display.
@@ -241,26 +270,30 @@ $.fn.watermark = function (text, className) {
 	/// 	overall it is not recommended.
 	/// </remarks>
 	
-	var hasText = (typeof(text) === "string"), hasClass = (typeof(className) === "string");
-
-	return this.filter(selWatermarkAble).each(
+	var hasText = (typeof(text) === "string"), hasClass;
+	
+	if (typeof(options) === "object") {
+		hasClass = (typeof(options.className) === "string");
+		options = $.extend({}, $.watermark.options, options);
+	}
+	else if (typeof(options) === "string") {
+		hasClass = true;
+		options = $.extend({}, $.watermark.options, {className: options});
+	}
+	else {
+		options = $.watermark.options;
+	}
+	
+	if (typeof(options.useNative) !== "function") {
+		options.useNative = options.useNative? function () { return true; } : function () { return false; };
+	}
+	
+	return this.each(
 		function () {
 			var $input = $(this);
 			
-			// Detect and use native browser support, if enabled with $.watermark.useNative
-			if ($.watermark.useNative) {
-				
-				// Safari placeholder attribute
-				if (typeof(this.placeholder) === "string") {
-					
-					if (hasText) {
-						this.placeholder = text;
-					}
-					
-					// Only set data flag for non-native watermarks (purposely commented-out)
-					// $input.data(dataFlag, 1);
-					return;
-				}
+			if (!$input.is(selWatermarkAble)) {
+				return;
 			}
 			
 			// Watermark already initialized?
@@ -275,13 +308,33 @@ $.fn.watermark = function (text, className) {
 					}
 					
 					if (hasClass) {
-						$input.data(dataClass, className);
+						$input.data(dataClass, options.className);
 					}
 				}
 			}
 			else {
+			
+				// Detect and use native browser support, if enabled in options
+				if (options.useNative.call(this, $input)) {
+					
+					// Placeholder attribute (WebKit)
+					// Big thanks to Opera for the wacky test required
+					if ((("" + $input.css("-webkit-appearance")).replace("undefined", "") !== "") && ($input.attr("tagName") !== "TEXTAREA")) {
+						
+						// className is not set because WebKit doesn't appear to have
+						// a separate class name property for placeholders (watermarks).
+						if (hasText) {
+							$input.attr("placeholder", text);
+						}
+						
+						// Only set data flag for non-native watermarks (purposely commented-out)
+						// $input.data(dataFlag, 1);
+						return;
+					}
+				}
+				
 				$input.data(dataText, hasText? text : "");
-				$input.data(dataClass, hasClass? className : $.watermark.className);
+				$input.data(dataClass, options.className);
 				$input.data(dataFlag, 1); // Flag indicates watermark was initialized
 				
 				// Special processing for password type
@@ -292,13 +345,26 @@ $.fn.watermark = function (text, className) {
 					$wm.data(dataText, $input.data(dataText));
 					$wm.data(dataClass, $input.data(dataClass));
 					$wm.data(dataFlag, 1);
+					$wm.attr("maxLength", text.length);
 					
 					$wm.focus(
 						function () {
 							$.watermark._hide($wm, true);
 						}
+					).bind("dragenter",
+						function () {
+							$.watermark._hide($wm);
+						}
+					).bind("dragend",
+						function () {
+							window.setTimeout(function () { $wm.blur(); }, 1);
+						}
 					);
 					$input.blur(
+						function () {
+							$.watermark._show($input);
+						}
+					).bind("dragleave",
 						function () {
 							$.watermark._show($input);
 						}
@@ -318,6 +384,30 @@ $.fn.watermark = function (text, className) {
 						function () {
 							$input.data(dataFocus, 0);
 							$.watermark._show($input);
+						}
+					).bind("dragenter",
+						function () {
+							$.watermark._hide($input);
+						}
+					).bind("dragleave",
+						function () {
+							$.watermark._show($input);
+						}
+					).bind("dragend",
+						function () {
+							window.setTimeout(function () { $.watermark._show($input); }, 1);
+						}
+					).bind("drop",
+						// Firefox makes this lovely function necessary because the dropped text
+						// is merged with the watermark before the drop event is called.
+						function (evt) {
+							var dropText = evt.originalEvent.dataTransfer.getData("Text");
+							
+							if ($input.val().replace(dropText, "") === $input.data(dataText)) {
+								$input.val(dropText);
+							}
+							
+							$input.focus();
 						}
 					);
 				}

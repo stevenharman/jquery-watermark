@@ -2,16 +2,42 @@ Changelog for Watermark plugin for jQuery
 Copyright © 2009 Todd Northrop
 http://www.speednet.biz/
 
-Last updated August 22, 2009
+Last updated September 10, 2009
 
 ____________________________
-Version 2.x (2009-xx-xx)
+Version 3.0 (2009-09-10)
 	
-	Working copy for next version of the plugin.  Will focus on fixing bugs and suggestions on the Issue list.
+	The plugin gets another major version number boost due to significant improvements in areas not covered by any other watermark plugin for jQuery.  Several new features and bug fixes, including everything on the Issue list that could be verified.  (Issue list: http://code.google.com/p/jquery-watermark/issues/list)
 	
-	(TO DO) Issue #1 - Integrate with Safari's input type="search".
+	Solved Issue #1 - Integrate with WebKit browsers that support input tags with type="search".  (Issue list refers to Safari alone, but it turns out that Google Chrome also supports type="search" elements.)
 	
-	(TO DO) Issue #4 - Dragging and dropping text does not replace the watermark.
+	Solved Issue #4 - Dragging and dropping text now replaces the watermark.  This was the most significant change, and required several work-arounds due to a variety of browser glitches.
+	
+	Added support for native browser watermarks in WebKit browsers ("placeholder" attribute).  New "useNative" option in the plugin allows native browser watermark support to be enabled/disabled globally, or for individual watermarks.  When a watermark is created, the plugin detects if native browser support is available, and automatically uses it, as long as useNative is true.  Two good reasons to turn *off* native support is the lack of CSS class name support (native watermark/placeholder is always light gray), and native watermarks/placeholders in type="search" elements do not always work properly with drag-and-drop.  (Using the watermark plugin support (useNative:false) for type="search" elements *does* work properly with drag-and-drop.)  However, for typical non-styled watermark usage, native browser support is encouraged, by leaving useNative set to true.  (Default is true).
+	
+	New "$.watermark.options" object stores the default options for watermarks.  There are currently two properties of $.watermark.options: className and useNative.  (BREAKING CHANGE:  $.watermark.className has been eliminated, and replaced with $.watermark.options.className.)  The use of an object to store default options is is keeping with current jQuery techniques, and allows for future expansion in a much more flexible manner.
+	
+	New watermark calling signature - $( <selector> ).watermark( [text] , [options] );
+
+	Example: $("#myElement").watermark("Enter Username", {className: "inputspace", useNative: false});
+	
+	Plugin continues to support the use of a string value for the second argument, for backward compatibility.  If a string value is passed for the second argument, it is used as the className for the watermark, overriding the default value in $.watermark.options.className.
+	
+	"useNative" option can be either a boolean or a function.  If useNative is a function, then the function is evaluated for each element in the matched set, returning a boolean value specifying if native support is enabled for the element.  The function is passed one argument -- a jQuery object containing the element being tested as the only element in its matched set -- and the DOM element being tested is the object on which the function is invoked (the value of "this").
+	
+	Worked around jQuery/Chrome bug that would execute $(...).filter(...).each( fn ) twice for each element in the matched set.  (Fairly confident this is a jQuery bug of some type.)
+	
+	Fixed Chrome bug where password watermarks longer than 10 characters would cause the functionality to fail.
+	
+	Added $.watermark.version (string value).  Currently set to "3.0".
+	
+	KNOWN ISSUES:
+		
+		Opera support for drag-and-drop is terrible, even with version 10.  It basically supports it when it feels like it.
+		
+		WebKit native support for watermarks in Search elements (type="search") is poor with drag-and-drop.  Sometimes it works, but it almost never supports dragging between Search elements.  The demo page can be used to try it out and compare the functionality to the plugin's functionality.  With Search elements, you should probably set useNative to false.
+		
+		WebKit native support does not yet extend to textarea elements.  (Limitation of WebKit browsers.)
 	
 ____________________________
 Version 2.0 (2009-06-02)
