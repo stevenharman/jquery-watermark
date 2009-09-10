@@ -2,11 +2,11 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
-	<title>jQuery Watermark</title>
+	<title>jQuery Watermark 3.0 Demo</title>
 
 	<script type="text/javascript" src="http://www.google.com/jsapi"></script>
 	<script type="text/javascript">google.load("jquery", "1.3.2");</script>
-	<script type="text/javascript" src="jquery.watermark-2.0.min.js"></script>
+	<script type="text/javascript" src="jquery.watermark.js"></script>
 
 	<style type="text/css" media="screen">
 		.watermark {
@@ -79,7 +79,7 @@
 			color: #f00;
 		}
 		form.cmxform label {
-			width: 120px; /* Width of labels */
+			width: 130px; /* Width of labels */
 		}
 		form.cmxform input[type=text],
 		form.cmxform input[type=password] {
@@ -138,7 +138,7 @@
 <body>
 
 <h1>jQuery Watermark Plugin</h1>
-<h2>v 2.0</h2>
+<h2>v 3.0</h2>
 
 <fieldset id="summary">
 	<p>This jQuery plugin will easily create watermark hints in input and textarea elements.</p>
@@ -160,6 +160,7 @@
 		<li><a href="#3">Demo 3</a> &ndash; Watermark changed dynamically (countdown timer)</li>
 		<li><a href="#4">Demo 4</a> &ndash; Multi-line watermark in a TEXTAREA tag</li>
 		<li><a href="#5">Demo 5</a> &ndash; Watermark in a password input element</li>
+		<li><a href="#6">Demo 6</a> &ndash; Support for WebKit search element (type=&quot;search&quot;)</li>
 	</ul>
 </fieldset>
 
@@ -213,6 +214,7 @@
 			<li><label></label> <input id="d3-submit" type="button" value="Submit" /></li>
 			<li><label></label> &bull; This Submit button issues a call to the <strong>jQuery submit() trigger</strong> (programmatic submit).</li>
 			<li><label></label> &bull; Check the QueryString after clicking to verify that a watermark value is never submitted.</li>
+			<li><label></label> &bull; Uses the <strong>useNative: false</strong> option so that a class name can be applied.</li>
 		</ol>
 	</fieldset>
 </form>
@@ -248,12 +250,33 @@
 	</fieldset>
 </form>
 
+<form id="demo6" action="" method="GET" class="cmxform">
+	<h3>Demonstration 6</h3>
+	<fieldset>
+		<legend>Support for WebKit search element (type=&quot;search&quot;)</legend>
+		<ol>
+			<li><label for="d6-nativesearch">Search <em>*</em></label> <input id="d6-nativesearch" name="d6-nativesearch" type="search" /></li>
+			<li><label for="d6-nativesearchhistory">Search w/ History <em>*</em></label> <input id="d6-nativesearchhistory" name="d6-nativesearchhistory" type="search" results="5" /></li>
+			<li><label for="d6-search">Search</label> <input id="d6-search" name="d6-search" type="search" /></li>
+			<li><label for="d6-searchhistory">Search w/ History</label> <input id="d6-searchhistory" name="d6-searchhistory" type="search" results="5" /></li>
+			<li><label></label> <input type="submit" value="Submit" /></li>
+			<li><label></label> &bull; This example is for WebKit browsers and any other browser that supports <strong style="white-space:nowrap">&lt;input type=&quot;search&quot; ... /&gt;</strong>.</li>
+			<li><label></label> &bull; The first two input elements (marked with <em>*</em>) use the native watermark capability (if available).</li>
+			<li><label></label> &bull; The 3rd and 4th input elements use the plugin [non-native] watermark functionality.</li>
+			<li><label></label> &bull; WebKit native watermark support is buggy for drag-and-drop into and between Search fields (try it).</li>
+			<li><label></label> &bull; Current recommendation is to set <strong>useNative: false</strong> for elements with type=&quot;search&quot;.</li>
+		</ol>
+	</fieldset>
+</form>
+
 <div id="foot">
 	<p>Watermark plugin for jQuery</p>
 	<p>Copyright &copy; 2009 Todd Northrop</p>
 	<p>Visit Speednet Group at <a href="http://www.speednet.biz/">www.speednet.biz</a></p>
 	<h1>Other recent projects:</h1>
 	<ul>
+		<li><a href="http://topzindex.googlecode.com/">TopZIndex plugin for jQuery</a></li>
+		<li><a href="http://jquery-unwrap.googlecode.com/">Unwrap plugin for jQuery</a></li>
 		<li><a href="http://tinyautosave.googlecode.com/">Auto-Save plugin for TinyMCE</a></li>
 		<li><a href="http://www.lotterypost.com/gadget">Lottery Results Gagdet for Windows&nbsp;Vista&nbsp;&amp; Windows&nbsp;7</a></li>
 	</ul>
@@ -281,7 +304,10 @@
 	});
 
 	// ** DEMO 3 *************
-	var $d3 = $("#d3-country"), $d3tip = $("#d3-tip"), c = 11, timer;
+	var $d3 = $("#d3-country"),
+		$d3tip = $("#d3-tip"),
+		c = 11,
+		timer;
 	
 	function countdown() {
 		if (--c == 0) {
@@ -289,7 +315,10 @@
 			$d3tip.show();
 		}
 		else {
-			$d3.watermark("Auto-select in: " + c, (c>5)? "watermark" : "watermark3");
+			$d3.watermark("Auto-select in: " + c, {
+				useNative: false,
+				className: (c>5)? "watermark" : "watermark3"
+			});
 			timer = window.setTimeout(countdown, 1000);
 		}
 	}
@@ -327,6 +356,14 @@
 	$(function () {
 		$("#d5-username").watermark("Enter your username");
 		$("#d5-password").watermark("Enter your password");
+	});
+
+	// ** DEMO 6 *************
+	$(function () {
+		$("#d6-nativesearch").watermark("Search");
+		$("#d6-nativesearchhistory").watermark("Enter keyword(s) or select from past searches");
+		$("#d6-search").watermark("Search", {useNative: false});
+		$("#d6-searchhistory").watermark("Enter keyword(s) or select from past searches", {useNative: false});
 	});
 
 	// ** Table of Contents *************
