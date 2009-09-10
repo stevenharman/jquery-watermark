@@ -31,6 +31,8 @@ Version 3.0 (2009-09-10)
 	
 	Added $.watermark.version (string value).  Currently set to "3.0".
 	
+	Changed naming convention of files, removing the version number from the file name and folder name.  In real-world usage, it can be disruptive to try to implement a new version of the plugin if the file name includes the version number.  There are some who feel differently about this issue, and prefer the version number in the file name, but I prefer it removed.  It is easy to add back into the file name, if desired by the individual developer.
+	
 	KNOWN ISSUES:
 		
 		Opera support for drag-and-drop is terrible, even with version 10.  It basically supports it when it feels like it.
