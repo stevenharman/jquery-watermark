@@ -2,7 +2,14 @@ Changelog for Watermark plugin for jQuery
 Copyright © 2009 Todd Northrop
 http://www.speednet.biz/
 
-Last updated September 10, 2009
+Last updated September 11, 2009
+
+____________________________
+Version 3.0.1 (2009-09-11)
+	
+	Solved Issue #5 (postback issue with ASP.NET DropDownList) - Fixed form submit bug with IE6 and IE7 that threw a JavaScript error when a form was submitted programmatically.
+	
+	Minor cosmetic change suggested on jQuery issues list (Text blink when setting specific class).  Reversed two lines so that class name is set before the watermark text is set.
 
 ____________________________
 Version 3.0 (2009-09-10)
