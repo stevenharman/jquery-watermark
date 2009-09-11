@@ -1,12 +1,12 @@
 /*	
 	Watermark plugin for jQuery
-	Version: 3.0
+	Version: 3.0.1
 	http://jquery-watermark.googlecode.com/
 
 	Copyright (c) 2009 Todd Northrop
 	http://www.speednet.biz/
 	
-	September 10, 2009
+	September 11, 2009
 
 	Requires:  jQuery 1.2.3+
 	
@@ -197,8 +197,8 @@ $.watermark = {
 				}
 			}
             
-			$input.val(text);
 			$input.addClass($input.data(dataClass));
+			$input.val(text);
 		}
 		else {
 			$.watermark._hide($input);
@@ -423,8 +423,16 @@ $.fn.watermark = function (text, options) {
 					$form.submit($.watermark.hideAll);
 					
 					this.form.submit = function () {
+						var nativeSubmit = $form.data(dataFormSubmit);
+						
 						$.watermark.hideAll();
-						$form.data(dataFormSubmit).apply($form[0], arguments);
+						
+						if (nativeSubmit.apply) {
+							nativeSubmit.apply($form[0], arguments);
+						}
+						else {
+							nativeSubmit();
+						}
 					};
 				}
 			}
