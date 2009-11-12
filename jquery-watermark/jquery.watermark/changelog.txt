@@ -2,7 +2,20 @@ Changelog for Watermark plugin for jQuery
 Copyright © 2009 Todd Northrop
 http://www.speednet.biz/
 
-Last updated September 11, 2009
+Last updated November 11, 2009
+
+____________________________
+Version 3.0.2 (2009-11-11)
+	
+	Solved Issue #7 (Resolving conflict with ASP.NET validators) - Added capability to hijack any number of JavaScript functions that, when called, first hide all watermarks and then call the originally-intended function. Initially, only the Page_ClientValidate is specified to be overridden. Others will be added if feedback dictates. If a function specified is not found on the page, the function name is ignored on that page.
+	
+	Solved Issue #8 (Error when there's no form on the page: this.form is null) - Added a test to ensure there is a form on the page before attempting to override the form submit function.
+	
+	The $.watermark.version property will properly return "3.0.2". The version number was not updated in the 3.0.1 release, and continued to report as 3.0.
+	
+	Added detection for the presence of watermark activity on a page so that hideAll() will not bother trying to do anything if there are no watermarks to hide. Also, calling hideAll() multiple times in succession will process the elements on the page only once.
+	
+	Switched from YUI Compressor to Microsoft Ajax Minifier for minification. The new Microsoft minifier produces more compact code than YUI, so even with the additional code, the overall size is not much bigger than the last release. (I have made a free online JavaScript compressor available with both Microsoft and YUI compression methods at http://www.lotterypost.com/js-compress.aspx.)
 
 ____________________________
 Version 3.0.1 (2009-09-11)

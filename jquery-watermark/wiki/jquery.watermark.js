@@ -1,12 +1,12 @@
 /*	
 	Watermark plugin for jQuery
-	Version: 3.0.1
+	Version: 3.0.2
 	http://jquery-watermark.googlecode.com/
 
 	Copyright (c) 2009 Todd Northrop
 	http://www.speednet.biz/
 	
-	September 11, 2009
+	November 11, 2009
 
 	Requires:  jQuery 1.2.3+
 	
@@ -46,7 +46,25 @@ var
 	selWatermarkDefined = ":data(" + dataFlag + ")",
 
 	// Includes only elements capable of having watermark
-	selWatermarkAble = ":text,:password,:search,textarea";
+	selWatermarkAble = ":text,:password,:search,textarea",
+	
+	// triggerFns:
+	// Array of function names to look for in the global namespace.
+	// Any such functions found will be hijacked to trigger a call to
+	// hideAll() any time they are called.  The default value is the
+	// ASP.NET function that validates the controls on the page
+	// prior to a postback.
+	// 
+	// Am I missing other important trigger function(s) to look for?
+	// Please leave me feedback:
+	// http://code.google.com/p/jquery-watermark/issues/list
+	triggerFns = [
+		"Page_ClientValidate"
+	],
+	
+	// Holds a value of true if a watermark was displayed since the last
+	// hideAll() was executed. Avoids repeatedly calling hideAll().
+	pageDirty = false;
 
 // Extends jQuery with a custom selector - ":data(...)"
 // :data(<name>)  Includes elements that have a specific name defined in the jQuery data collection. (Only the existence of the name is checked; the value is ignored.)
@@ -91,8 +109,8 @@ $.extend($.expr[":"], {
 $.watermark = {
 
 	// Current version number of the plugin
-	version: "3.0",
-
+	version: "3.0.2",
+		
 	// Default options used when watermarks are instantiated.
 	// Can be changed to affect the default behavior for all
 	// new or updated watermarks.
@@ -169,9 +187,12 @@ $.watermark = {
 	
 	// Internal use only.
 	_show: function ($input) {
-		var val = $input.val(), text = $input.data(dataText), type = $input.attr("type");
+		var val = $input.val(),
+			text = $input.data(dataText),
+			type = $input.attr("type");
 
 		if (((val.length == 0) || (val == text)) && (!$input.data(dataFocus))) {
+			pageDirty = true;
 		
 			// Password type?
 			if ($input.data(dataPassword)) {
@@ -207,7 +228,10 @@ $.watermark = {
 	
 	// Hides all watermarks on the current page.
 	hideAll: function () {
-		$.watermark.hide(selWatermarkAble);
+		if (pageDirty) {
+			$.watermark.hide(selWatermarkAble);
+			pageDirty = false;
+		}
 	},
 	
 	// Displays all watermarks on the current page.
@@ -416,24 +440,26 @@ $.fn.watermark = function (text, options) {
 				// we need to replace the form's submit function with our own
 				// function.  Otherwise watermarks won't be cleared when the form
 				// is submitted programmatically.
-				var $form = $(this.form);
-				
-				if (!$form.data(dataFormSubmit)) {
-					$form.data(dataFormSubmit, this.form.submit);
-					$form.submit($.watermark.hideAll);
+				if (this.form) {
+					var $form = $(this.form);
 					
-					this.form.submit = function () {
-						var nativeSubmit = $form.data(dataFormSubmit);
+					if (!$form.data(dataFormSubmit)) {
+						$form.data(dataFormSubmit, this.form.submit);
+						$form.submit($.watermark.hideAll);
 						
-						$.watermark.hideAll();
-						
-						if (nativeSubmit.apply) {
-							nativeSubmit.apply($form[0], arguments);
-						}
-						else {
-							nativeSubmit();
-						}
-					};
+						this.form.submit = function () {
+							var nativeSubmit = $form.data(dataFormSubmit);
+							
+							$.watermark.hideAll();
+							
+							if (nativeSubmit.apply) {
+								nativeSubmit.apply($form[0], arguments);
+							}
+							else {
+								nativeSubmit();
+							}
+						};
+					}
 				}
 			}
 			
@@ -441,5 +467,28 @@ $.fn.watermark = function (text, options) {
 		}
 	).end();
 };
+
+// Hijack any functions found in the triggerFns list
+if (triggerFns.length) {
+
+	// Wait until DOM is ready before searching
+	$(function () {
+		var i, name, fn;
+	
+		for (i=triggerFns.length-1; i>=0; i--) {
+			name = triggerFns[i];
+			fn = window[name];
+			
+			if (typeof(fn) === "function") {
+				window[name] = (function (origFn) {
+					return function () {
+						$.watermark.hideAll();
+						origFn();
+					};
+				})(fn);
+			}
+		}
+	});
+}
 
 })(jQuery);
