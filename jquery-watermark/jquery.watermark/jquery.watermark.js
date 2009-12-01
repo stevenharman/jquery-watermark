@@ -1,12 +1,12 @@
 /*	
 	Watermark plugin for jQuery
-	Version: 3.0.2
+	Version: 3.0.3
 	http://jquery-watermark.googlecode.com/
 
 	Copyright (c) 2009 Todd Northrop
 	http://www.speednet.biz/
 	
-	November 11, 2009
+	November 30, 2009
 
 	Requires:  jQuery 1.2.3+
 	
@@ -109,14 +109,14 @@ $.extend($.expr[":"], {
 $.watermark = {
 
 	// Current version number of the plugin
-	version: "3.0.2",
+	version: "3.0.3",
 		
 	// Default options used when watermarks are instantiated.
 	// Can be changed to affect the default behavior for all
 	// new or updated watermarks.
 	// BREAKING CHANGE:  The $.watermark.className
-	// property that is present in all previous versions must now
-	// be referenced as $.watermark.options.className
+	// property that was present prior to version 3.0.2 must
+	// be changed to $.watermark.options.className
 	options: {
 		
 		// Default class name for all watermarks
@@ -441,24 +441,50 @@ $.fn.watermark = function (text, options) {
 				// function.  Otherwise watermarks won't be cleared when the form
 				// is submitted programmatically.
 				if (this.form) {
-					var $form = $(this.form);
+					var form = this.form,
+						$form = $(form);
 					
 					if (!$form.data(dataFormSubmit)) {
-						$form.data(dataFormSubmit, this.form.submit);
 						$form.submit($.watermark.hideAll);
 						
-						this.form.submit = function () {
-							var nativeSubmit = $form.data(dataFormSubmit);
+						// form.submit exists for all browsers except Google Chrome
+						// (see "else" below for explanation)
+						if (form.submit) {
+							$form.data(dataFormSubmit, form.submit);
 							
-							$.watermark.hideAll();
+							form.submit = (function (f, $f) {
+								return function () {
+									var nativeSubmit = $f.data(dataFormSubmit);
+									
+									$.watermark.hideAll();
+									
+									if (nativeSubmit.apply) {
+										nativeSubmit.apply(f, Array.prototype.slice.call(arguments));
+									}
+									else {
+										nativeSubmit();
+									}
+								};
+							})(form, $form);
+						}
+						else {
+							$form.data(dataFormSubmit, 1);
 							
-							if (nativeSubmit.apply) {
-								nativeSubmit.apply($form[0], arguments);
-							}
-							else {
-								nativeSubmit();
-							}
-						};
+							// This strangeness is due to the fact that Google Chrome's
+							// form.submit function is not visible to JavaScript (identifies
+							// as "undefined").  I had to invent a solution here because hours
+							// of Googling (ironically) for an answer did not turn up anything
+							// useful.  Within my own form.submit function I delete the form's
+							// submit function, and then call the non-existent function --
+							// which, in the world of Google Chrome, still exists.
+							form.submit = (function (f) {
+								return function () {
+									$.watermark.hideAll();
+									delete f.submit;
+									f.submit();
+								};
+							})(form);
+						}
 					}
 				}
 			}
@@ -483,7 +509,7 @@ if (triggerFns.length) {
 				window[name] = (function (origFn) {
 					return function () {
 						$.watermark.hideAll();
-						origFn();
+						origFn.apply(null, Array.prototype.slice.call(arguments));
 					};
 				})(fn);
 			}

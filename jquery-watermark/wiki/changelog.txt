@@ -2,8 +2,17 @@ Changelog for Watermark plugin for jQuery
 Copyright © 2009 Todd Northrop
 http://www.speednet.biz/
 
-Last updated November 11, 2009
+Last updated November 30, 2009
 
+____________________________
+Version 3.0.3 (2009-11-30)
+	
+	Solved Issue #9 (Form doesn't submit in Chrome when submitting programmatically) - This issue only manifested itself when native watermark support was turned off in Google Chrome, and the form was submitted programmatically [by calling form.submit()].  It happened because Google Chrome (and Google Chrome alone) makes the native form.submit function invisible to JavaScript, making the ability to hijack the seemingly non-existent function very difficult.  A creative solution was achieved (see the code if you're interested).
+	
+	Solved Issue #11 (ASP.NET ValidationGroup bug) - The issue occured because the original arguments were not being passed to the hijacked function (the ASP.NET client validation function).
+	
+	Fixed a potential, but unreported, issue that could arise if arguments (for some reason) were passed to the form.submit function.
+	
 ____________________________
 Version 3.0.2 (2009-11-11)
 	
