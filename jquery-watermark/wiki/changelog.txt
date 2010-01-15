@@ -1,8 +1,13 @@
 Changelog for Watermark plugin for jQuery
-Copyright © 2009 Todd Northrop
+Copyright © 2009-2010 Todd Northrop
 http://www.speednet.biz/
 
-Last updated November 30, 2009
+Last updated January 14, 2010
+
+____________________________
+Version 3.0.4 (2010-01-14)
+	
+	Worked around a breaking change in jQuery 1.4 in which the ":search" selector is no longer recognized.  Fixed by adding it back in to jQuery.
 
 ____________________________
 Version 3.0.3 (2009-11-30)
