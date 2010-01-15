@@ -1,5 +1,5 @@
 Watermark plugin for jQuery
-Copyright © 2009 Todd Northrop
+Copyright © 2009-2010 Todd Northrop
 http://www.speednet.biz/
 
 Last updated May 31, 2009
