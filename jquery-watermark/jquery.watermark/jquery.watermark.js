@@ -5,6 +5,8 @@
 
 	Copyright (c) 2009-2010 Todd Northrop
 	http://www.speednet.biz/
+	Dual licensed under the MIT or GPL Version 2 licenses.
+	see <http://www.opensource.org/licenses/mit-license.php> and <http://www.opensource.org/licenses/gpl-2.0.php>
 	
 	January 14, 2010
 
